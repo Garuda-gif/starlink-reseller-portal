@@ -104,3 +104,5 @@ app.post('/api/trigger-push', async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to initiate payment push.' });
   }
 });
+const momoRoutes = require('./routes/momo');
+app.use('/api/momo', momoRoutes);
